@@ -23,31 +23,31 @@ class RootGame(commands.Cog):
     async def sf(self, ctx):
         if ctx.invoked_subcommand is None:
             logger.info("Top-level help requested by %s", ctx.author.id)
-            await ctx.send("Use `!s help` to see a list of command groups.")
+            await ctx.send("Use `!sf help` to see a list of command groups.")
 
     @sf.command(name="help")
-    async def s_help(self, ctx):
-        logger.info("`!s help` requested by %s", ctx.author.id)
+    async def sf_help(self, ctx):
+        logger.info("`!sf help` requested by %s", ctx.author.id)
         await ctx.send(
             "**Sunflower Bot Commands**\n"
-            "`!s help` - Show top-level command groups\n"
-            "`!s leaderboard` - Show the top 10 petal leaderboard\n"
-            "`!s root help` - Show root game commands"
+            "`!sf help` - Show top-level command groups\n"
+            "`!sf leaderboard` - Show the top 10 petal leaderboard\n"
+            "`!sf root help` - Show root game commands"
         )
 
     @sf.group()
     async def root(self, ctx):
         if ctx.invoked_subcommand is None:
             logger.info("Root help requested by %s", ctx.author.id)
-            await ctx.send("Use `!s root help` to see a list of `root` commands.")
+            await ctx.send("Use `!sf root help` to see a list of `root` commands.")
 
     @root.command(name="help")
     async def root_help(self, ctx):
-        logger.info("`!s root help` requested by %s", ctx.author.id)
+        logger.info("`!sf root help` requested by %s", ctx.author.id)
         await ctx.send(
             "**Root Commands**\n"
-            "`!s root play` - Play the root game\n"
-            "`!s root leaderboard [root_number]` - Show the top 10 roots leaderboard, optionally filtered by root slot"
+            "`!sf root play` - Play the root game\n"
+            "`!sf root leaderboard [root_number]` - Show the top 10 roots leaderboard, optionally filtered by root slot"
         )
 
     @root.command()
@@ -166,7 +166,7 @@ class RootGame(commands.Cog):
         header = "Top 10 Roots:" if root_number is None else f"Top 10 Roots for Slot {root_number}:"
         await ctx.send(header + "\n" + "\n".join(lines))
 
-    @s.command(name="leaderboard")
+    @sf.command(name="leaderboard")
     async def petals_leaderboard(self, ctx):
         logger.info("Petal leaderboard requested by %s", ctx.author.id)
         users = await self.bot.root_repository.get_petal_leaderboard()
