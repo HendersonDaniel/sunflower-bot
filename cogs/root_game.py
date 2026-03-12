@@ -20,7 +20,7 @@ class RootGame(commands.Cog):
         self.active_votes = {}
 
     @commands.group()
-    async def s(self, ctx):
+    async def sf(self, ctx):
         if ctx.invoked_subcommand is None:
             logger.info("Top-level help requested by %s", ctx.author.id)
             await ctx.send("Use `!s help` to see a list of command groups.")
