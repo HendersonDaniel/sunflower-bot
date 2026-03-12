@@ -1,9 +1,17 @@
 from discord.ext import commands
 import asyncio
 import logging
-import time
 
 logger = logging.getLogger("sunflower-bot.root-game")
+VOTE_TIMEOUT_SECONDS = 60
+
+
+def format_root_option(index, root):
+    return (
+        f"{index}. [{root['name']}] "
+        f"(Root Slot: {root['number']})\n"
+        f"{root['description']}"
+    )
 
 
 class RootGame(commands.Cog):
@@ -44,13 +52,6 @@ class RootGame(commands.Cog):
 
     @root.command()
     async def play(self, ctx):
-        """
-        Makes the bot send a message of a choice of two roots to choose from.
-        Similar to Karuta in that it uses emojis 1 and 2 for the choice.
-        Updates the scores of the roots.
-        Adds a petal to each user who votes (by giving the 1 or 2 emoji, but not both).
-        """
-
         logger.info("Starting root game for channel=%s", ctx.channel.id)
         pair = await self.bot.root_repository.get_random_pair()
         if pair is None:
@@ -59,35 +60,25 @@ class RootGame(commands.Cog):
             return
 
         root1_data, root2_data = pair
-        root1 = (
-            f"1. [{root1_data['name']}] "
-            f"(Root Slot: {root1_data['number']}) \n"
-            f"{root1_data['description']}"
-        )
-        root2 = (
-            f"2. [{root2_data['name']}] "
-            f"(Root Slot: {root2_data['number']}) \n"
-            f"{root2_data['description']}"
-        )
+        root1 = format_root_option(1, root1_data)
+        root2 = format_root_option(2, root2_data)
 
         msg = await ctx.send(
-                f"Which root is better? \n\n"
-                f"{root1}\n"
-                f"{root2}"
-            )
-        
+            "Which root is better?\n\n"
+            f"{root1}\n"
+            f"{root2}"
+        )
+
         await msg.add_reaction("1️⃣")
         await msg.add_reaction("2️⃣")
 
         self.active_votes[msg.id] = {
             "option1": root1_data,
             "option2": root2_data,
-            "votes": {},
-            "channel_id": ctx.channel.id,
             "message": msg,
         }
         logger.info("Vote created message_id=%s", msg.id)
-        asyncio.create_task(self.expire_vote(msg.id, timeout_seconds=60))
+        asyncio.create_task(self.expire_vote(msg.id, timeout_seconds=VOTE_TIMEOUT_SECONDS))
 
     async def finalize_vote(self, message_id, winning_choice, voter_id):
         vote = self.active_votes.pop(message_id, None)
@@ -105,13 +96,13 @@ class RootGame(commands.Cog):
             v1,
             v2,
         )
-        await self.bot.root_repository.award_petals([voter_id], petals=1)
-        user_data = await self.bot.root_repository.get_user_petals(voter_id)
+        total_petals = await self.bot.root_repository.award_petals([voter_id], petals=1)
+        total_petals = total_petals.get(voter_id, 0)
         logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
 
         await vote["message"].reply(
-            f"Thank you for playing the root game, <@{voter_id}>. You earned 1 petal. \n"
-            f"Total petals: {user_data['petals']}"
+            f"Thank you for playing the root game, <@{voter_id}>. "
+            f"You earned 1 petal. Total petals: {total_petals}"
         )
 
     async def expire_vote(self, message_id, timeout_seconds=60):
@@ -140,9 +131,6 @@ class RootGame(commands.Cog):
 
         vote = self.active_votes.get(payload.message_id)
         if vote is None:
-            return
-
-        if payload.user_id in vote["votes"]:
             return
 
         if str(payload.emoji) == "1️⃣":

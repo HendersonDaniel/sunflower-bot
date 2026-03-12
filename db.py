@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timezone
 
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ReturnDocument
 
 
 def utc_now():
@@ -55,8 +56,9 @@ class RootRepository:
 
     async def award_petals(self, discord_user_ids, petals=1):
         now = utc_now()
+        totals = {}
         for discord_user_id in discord_user_ids:
-            await self.users.update_one(
+            result = await self.users.find_one_and_update(
                 {"discord_user_id": discord_user_id},
                 {
                     "$inc": {"petals": petals},
@@ -67,7 +69,10 @@ class RootRepository:
                     },
                 },
                 upsert=True,
+                return_document=ReturnDocument.AFTER,
             )
+            totals[discord_user_id] = result["petals"]
+        return totals
 
     async def get_user_petals(self, discord_user_id):
         return await self.users.find_one({"discord_user_id": discord_user_id})

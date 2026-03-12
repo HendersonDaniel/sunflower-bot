@@ -742,7 +742,27 @@
   {
     "name": "Soul Spike",
     "number": 3,
-    "description": "As previously shown, unblockable damage.",
+    "description": "Deals damage of an undefendable kind, but uses your own soul as fuel and is not easy to heal from.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Detect Soul",
+    "number": 3,
+    "description": "Not all souls are visible; this root helps you perceive souls that would otherwise go unnoticed.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Find Truth",
+    "number": 3,
+    "description": "Helps you train your own soul, though it is not the most efficient method.",
     "score": 0,
     "wins": 0,
     "losses": 0,
