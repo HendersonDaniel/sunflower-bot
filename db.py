@@ -50,8 +50,12 @@ class RootRepository:
             return None
         return roots
 
-    async def get_leaderboard(self, limit=10):
-        cursor = self.roots.find().sort("score", -1).limit(limit)
+    async def get_leaderboard(self, limit=10, root_number=None):
+        query = {}
+        if root_number is not None:
+            query["number"] = int(root_number)
+
+        cursor = self.roots.find(query).sort("score", -1).limit(limit)
         return await cursor.to_list(length=limit)
 
     async def award_petals(self, discord_user_ids, petals=1):

@@ -47,7 +47,7 @@ class RootGame(commands.Cog):
         await ctx.send(
             "**Root Commands**\n"
             "`!s root play` - Play the root game\n"
-            "`!s root leaderboard` - Show the top 10 roots leaderboard"
+            "`!s root leaderboard [root_number]` - Show the top 10 roots leaderboard, optionally filtered by root slot"
         )
 
     @root.command()
@@ -146,21 +146,25 @@ class RootGame(commands.Cog):
 
     
     @root.command()
-    async def leaderboard(self, ctx):
+    async def leaderboard(self, ctx, root_number: int | None = None):
         """
         Shows a list of top ten roots in the ranking.
         """
-        logger.info("Leaderboard requested by %s", ctx.author.id)
-        roots = await self.bot.root_repository.get_leaderboard()
+        logger.info("Leaderboard requested by %s filter=%s", ctx.author.id, root_number)
+        roots = await self.bot.root_repository.get_leaderboard(root_number=root_number)
         if not roots:
-            await ctx.send("No roots found in MongoDB.")
+            if root_number is None:
+                await ctx.send("No roots found in MongoDB.")
+            else:
+                await ctx.send(f"No roots found for root slot {root_number}.")
             return
 
         lines = [
             f"{index}. ({root['number']}) [{root['name']}] ({root['score']:.2f})"
             for index, root in enumerate(roots, start=1)
         ]
-        await ctx.send("Top 10 Roots:\n" + "\n".join(lines))
+        header = "Top 10 Roots:" if root_number is None else f"Top 10 Roots for Slot {root_number}:"
+        await ctx.send(header + "\n" + "\n".join(lines))
 
     @s.command(name="leaderboard")
     async def petals_leaderboard(self, ctx):
