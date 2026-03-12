@@ -56,17 +56,18 @@ class RootGame(commands.Cog):
         pair = await self.bot.root_repository.get_random_pair()
         if pair is None:
             logger.warning("Root game start failed: fewer than 2 roots in database")
-            await ctx.send("Add at least 2 roots to MongoDB before playing the root game.")
+            await ctx.send("Add at least 2 roots to the database before playing the root game.")
             return
 
         root1_data, root2_data = pair
         root1 = format_root_option(1, root1_data)
         root2 = format_root_option(2, root2_data)
 
-        msg = await ctx.send(
+        msg = await ctx.reply(
             "Which root is better?\n\n"
-            f"{root1}\n"
-            f"{root2}"
+            f"{root1}\n\n"
+            f"{root2}",
+            mention_author=True,
         )
 
         await msg.add_reaction("1️⃣")
@@ -101,8 +102,8 @@ class RootGame(commands.Cog):
         logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
 
         await vote["message"].reply(
-            f"Thank you for playing the root game, <@{voter_id}>. "
-            f"You earned 1 petal. Total petals: {total_petals}"
+            f"Thank you for playing the root game <@{voter_id}>. \n"
+            f"You earned 1 Petal. \nTotal Petals: {total_petals}"
         )
 
     async def expire_vote(self, message_id, timeout_seconds=60):
@@ -140,7 +141,6 @@ class RootGame(commands.Cog):
         else:
             return
 
-        vote["votes"][payload.user_id] = choice
         logger.info("Recorded vote message_id=%s user_id=%s choice=%s", payload.message_id, payload.user_id, choice)
         await self.finalize_vote(payload.message_id, choice, payload.user_id)
 
@@ -157,7 +157,7 @@ class RootGame(commands.Cog):
             return
 
         lines = [
-            f"{index}. [{root['number']}] {root['name']} ({root['score']:.2f})"
+            f"{index}. ({root['number']}) [{root['name']}] ({root['score']:.2f})"
             for index, root in enumerate(roots, start=1)
         ]
         await ctx.send("Top 10 Roots:\n" + "\n".join(lines))
@@ -172,11 +172,27 @@ class RootGame(commands.Cog):
 
         lines = []
         for index, user in enumerate(users, start=1):
-            member = ctx.guild.get_member(user["discord_user_id"]) if ctx.guild else None
-            display_name = member.display_name if member else f"User {user['discord_user_id']}"
+            display_name = await self.get_user_display_name(ctx, user["discord_user_id"])
             lines.append(f"{index}. {display_name} ({user['petals']} petals)")
 
         await ctx.send("Top 10 Petals:\n" + "\n".join(lines))
+
+    async def get_user_display_name(self, ctx, discord_user_id):
+        if ctx.guild:
+            member = ctx.guild.get_member(discord_user_id)
+            if member:
+                return member.display_name
+
+        user = self.bot.get_user(discord_user_id)
+        if user:
+            return user.name
+
+        try:
+            user = await self.bot.fetch_user(discord_user_id)
+        except Exception:
+            return f"User {discord_user_id}"
+
+        return user.name
 
 
 async def setup(bot):
