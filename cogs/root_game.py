@@ -51,18 +51,18 @@ class RootGame(commands.Cog):
     @commands.group()
     async def sf(self, ctx):
         if ctx.invoked_subcommand is None:
-            logger.info("Top-level help requested by %s", ctx.author.id)
+            logger.info("Top-level help requested")
             await ctx.send("Use `!sf help` to see a list of command groups.")
 
     @sf.group()
     async def root(self, ctx):
         if ctx.invoked_subcommand is None:
-            logger.info("Root help requested by %s", ctx.author.id)
+            logger.info("Root help requested")
             await ctx.send("Use `!sf root help` to see a list of `root` commands.")
 
     @root.command(name="help")
     async def root_help(self, ctx):
-        logger.info("`!sf root help` requested by %s", ctx.author.id)
+        logger.info("`!sf root help` requested")
         await ctx.send(
             "**Root Commands**\n"
             "`!sf root play` - Play the root game\n"
@@ -124,10 +124,9 @@ class RootGame(commands.Cog):
             return
 
         logger.info(
-            "Processing vote %s winner=%s voter=%s",
+            "Processing vote %s winner=%s",
             message_id,
             winning_choice,
-            voter_id,
         )
         votes1 = 1 if winning_choice == 1 else 0
         votes2 = 1 if winning_choice == 2 else 0
@@ -155,7 +154,7 @@ class RootGame(commands.Cog):
                 "total_petals": total_petals,
             }
         )
-        logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
+        logger.info("Awarded 1 petal for vote %s", message_id)
 
         petal_text = build_petal_summary_message(vote["petal_entries"])
         if vote["petal_message"] is None:
@@ -196,9 +195,8 @@ class RootGame(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         logger.info(
-            "Reaction add message_id=%s user_id=%s emoji=%s",
+            "Reaction add message_id=%s emoji=%s",
             payload.message_id,
-            payload.user_id,
             payload.emoji,
         )
 
@@ -218,9 +216,8 @@ class RootGame(commands.Cog):
 
         if payload.user_id in vote["seen_voters"]:
             logger.info(
-                "Ignoring duplicate vote message_id=%s user_id=%s choice=%s",
+                "Ignoring duplicate vote message_id=%s choice=%s",
                 payload.message_id,
-                payload.user_id,
                 choice,
             )
             return
@@ -228,9 +225,8 @@ class RootGame(commands.Cog):
         vote["seen_voters"].add(payload.user_id)
 
         logger.info(
-            "Recorded vote message_id=%s user_id=%s choice=%s",
+            "Recorded vote message_id=%s choice=%s",
             payload.message_id,
-            payload.user_id,
             choice,
         )
         await self.process_vote(payload.message_id, choice, payload.user_id)
@@ -241,7 +237,7 @@ class RootGame(commands.Cog):
         """
         Shows a list of top ten roots in the ranking.
         """
-        logger.info("Leaderboard requested by %s filter=%s", ctx.author.id, root_number)
+        logger.info("Leaderboard requested filter=%s", root_number)
         roots = await self.bot.root_repository.get_leaderboard(root_number=root_number)
         if not roots:
             if root_number is None:
@@ -259,7 +255,7 @@ class RootGame(commands.Cog):
 
     @sf.command(name="leaderboard")
     async def petals_leaderboard(self, ctx):
-        logger.info("Petal leaderboard requested by %s", ctx.author.id)
+        logger.info("Petal leaderboard requested")
         users = await self.bot.root_repository.get_petal_leaderboard()
         if not users:
             await ctx.send("No petal data found.")
@@ -301,7 +297,7 @@ class PlayAgainView(discord.ui.View):
 
     @discord.ui.button(label="Play Again", style=discord.ButtonStyle.primary)
     async def play_again(self, interaction, button):
-        logger.info("Play again requested by user=%s channel=%s", interaction.user.id, interaction.channel.id)
+        logger.info("Play again requested in channel=%s", interaction.channel.id)
         await interaction.response.defer()
         await self.root_game_cog.start_root_game(
             channel=interaction.channel,

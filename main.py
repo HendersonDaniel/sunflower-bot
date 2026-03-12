@@ -20,7 +20,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 async def sf_help_command(ctx):
-    logger.info("`!sf help` requested by %s", ctx.author.id)
+    logger.info("`!sf help` requested")
     await ctx.send(
         "**Sunflower Bot Commands**\n"
         "`!sf help` - Show top-level command groups\n"
@@ -39,11 +39,9 @@ async def on_message(message):
         return
 
     logger.info(
-        "Message received guild=%s channel=%s author=%s content=%r",
+        "Message received guild=%s channel=%s",
         getattr(message.guild, "id", "DM"),
         message.channel.id,
-        message.author.id,
-        message.content,
     )
     await bot.process_commands(message)
 
@@ -51,9 +49,8 @@ async def on_message(message):
 @bot.event
 async def on_command(ctx):
     logger.info(
-        "Command invoked name=%s author=%s channel=%s",
+        "Command invoked name=%s channel=%s",
         ctx.command.qualified_name,
-        ctx.author.id,
         ctx.channel.id,
     )
 
@@ -61,10 +58,10 @@ async def on_command(ctx):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        logger.warning("Unknown command from %s: %r", ctx.author.id, ctx.message.content)
+        logger.warning("Unknown command received in channel %s", ctx.channel.id)
         return
 
-    logger.exception("Command error for %s", ctx.message.content, exc_info=error)
+    logger.exception("Command error for command=%s", getattr(ctx.command, "qualified_name", "unknown"), exc_info=error)
     if isinstance(getattr(error, "original", error), discord.Forbidden):
         logger.error("Cannot send error message in channel %s due to missing permissions", ctx.channel.id)
         return
