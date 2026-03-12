@@ -72,6 +72,10 @@ class RootRepository:
     async def get_user_petals(self, discord_user_id):
         return await self.users.find_one({"discord_user_id": discord_user_id})
 
+    async def get_petal_leaderboard(self, limit=10):
+        cursor = self.users.find().sort("petals", -1).limit(limit)
+        return await cursor.to_list(length=limit)
+
     async def record_matchup(self, root1, root2, votes1, votes2):
         total_votes = votes1 + votes2
         if total_votes <= 0:

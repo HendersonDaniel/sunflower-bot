@@ -1,0 +1,812 @@
+[
+  {
+    "name": "Fortunes Eyes",
+    "number": 4,
+    "description": "Another broken root, allows you to glimpse at a person's fate.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mind-Dagger Storm",
+    "number": 4,
+    "description": "Condense mental energy into a dagger that you can mentally control.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Personal Abode",
+    "number": 4,
+    "description": "Creates and ties a small dimension to you which you will have to cultivate manually.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Plant Cue",
+    "number": 4,
+    "description": "Expend mental energy to implant a mental cue upon someone; mental cues cannot control minds, but merely plant suggestions.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Control Presence",
+    "number": 4,
+    "description": "Control the presence and aura leaking off of you; higher tiers can even conceal authorities.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arrow Propulsion",
+    "number": 4,
+    "description": "Fire an arrow without a bow, complimentary to Arcane Arrow.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mark of Tracking",
+    "number": 4,
+    "description": "Leave a nigh-undetectable mark on an item which you can reliably sense for the next 24 hours so long as it remains within the same plane or dimension.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Danger Sense",
+    "number": 4,
+    "description": "Gain intuition toward when your life is in danger; higher tiers are almost precognitive.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Stone Skin",
+    "number": 1,
+    "description": "Passive damage reduction",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Iron Bones",
+    "number": 2,
+    "description": "Passive damage reduction",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Steel Flesh",
+    "number": 3,
+    "description": "Passive damage reduction",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arcane Affinity",
+    "number": 1,
+    "description": "Helps with skill theory relating to magical ideas.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arcane Sense",
+    "number": 2,
+    "description": "Helps sense things magical.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Resonance",
+    "number": 3,
+    "description": "Helps reduce friction between different magics.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arcane Flesh",
+    "number": 4,
+    "description": "Increases flesh affinity to inscribed magics; requires Resonance to not conflict with Physique.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Load",
+    "number": 1,
+    "description": "A passive root designed to boost your body's ability to handle multiple powers at once.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Spiral",
+    "number": 2,
+    "description": "Compresses ranged magic into a spiral to improve penetrative power.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Calibration",
+    "number": 3,
+    "description": "Automatically augments effects used in tandem with it to help achieve a desired effect.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Flesh Construct",
+    "number": 1,
+    "description": "Make an additional physical construct every tier.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Cosmetic Share",
+    "number": 1,
+    "description": "Share a visual property of an object with another object, such as shiny or dull.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Energy Tap",
+    "number": 1,
+    "description": "Place a mark upon an opponent and drain some mental energy.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Life Tap",
+    "number": 1,
+    "description": "A mark-based root with a donor mark and a receiver mark. Drains vitality from the donor-marked target to give it to the receiver-marked target.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Sleep Tap",
+    "number": 1,
+    "description": "A mark-based root with a donor mark and a receiver mark. Drains wakefulness from the donor-marked target to give it to the receiver-marked target.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Sub-Sleep",
+    "number": 2,
+    "description": "Causes a small portion of your mind to sleep even when awake, allowing for slow mental energy recovery.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Balance",
+    "number": 2,
+    "description": "Pick willing individuals and balance Mental Energy between them.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Life Burn",
+    "number": 2,
+    "description": "Temporarily burn your Life Force to gain Mental Energy, temporarily lowering max HP until it recovers.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Devoted Mentor",
+    "number": 5,
+    "description": "Mark someone as your student; if they are of an equal or lesser rank than you, they gain bonus XP.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "See Progress",
+    "number": 6,
+    "description": "Grants the ability to deeply quantify and analyze your growth, quantified using the XP scale of the Bloodline Shop.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Rejuvanative Flesh",
+    "number": 5,
+    "description": "Your flesh is more receptive to growth and learning, letting you train more often without issues; this affects all stats.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Flesh to Mind",
+    "number": 5,
+    "description": "Consume your progress in training your physical self to improve your mental self.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Skill Web",
+    "number": 6,
+    "description": "Form links between your skills, allowing for a boost to growth so long as they exist.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Hyperbolic Mental Chamber",
+    "number": 7,
+    "description": "Create a mental environment where time flies faster. Authority strain does not recover faster here.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Authority-Mallable",
+    "number": 5,
+    "description": "Increases your malleability to Authorities you obtain, amplifying skill theory perks or alterations to your body. You cannot advance beyond the 5th root until you obtain an Authority.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Life-Death Rotation Refinement",
+    "number": 6,
+    "description": "Burn Life Force to obtain physical growth.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Pocket Strike",
+    "number": 6,
+    "description": "Store the damage of an attack against you. It is replaced by whatever attack is currently stored, and can only be removed by replacing it with another attack.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Cancellation",
+    "number": 5,
+    "description": "Consume Mental Energy to deny damage.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Timeline Drop",
+    "number": 5,
+    "description": "Throw yourself a few dozen seconds into the future, allowing you to escape lethal damage.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Erasure",
+    "number": 6,
+    "description": "Deny a strike against you. Limited uses; cannot deny a higher-tier attack.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Armored Skin",
+    "number": 6,
+    "description": "Reinforce your skin to be tough like certain metals.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Reinanimate",
+    "number": 6,
+    "description": "Once a day, if you would take lethal damage, you survive barely.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Rotate Gravity",
+    "number": 5,
+    "description": "Define the new down.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Sky Step",
+    "number": 5,
+    "description": "\"So long as I want to walk, there will be a path\" - Cole Ashen",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Road of the Cursed Path Mage",
+    "number": 5,
+    "description": "It grants additional root slots, but gives a curse for each root added. At novice, you can take a second first root; at mage, a second second root; and so on.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Exploding Vitality",
+    "number": 4,
+    "description": "A broken root in the bad sense, not overpowered. It allows you to burn vitality to deal damage, requires large amounts of HP, and is mainly worth taking because it is cheap.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Light Footed",
+    "number": 4,
+    "description": "Provides substantial benefits to movement. A magician can move without disturbing even the dust beneath their feet.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Partial Invisibility",
+    "number": 4,
+    "description": "Partially conceals your form, aiding in stealthy maneuvers.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Spectral Links",
+    "number": 4,
+    "description": "Make a construct of mental energy, links of mental energy, too weak to bind but strong enough to injure those they clash upon.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Reinforced Blade",
+    "number": 4,
+    "description": "Enhance a weapon within your hand.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Lesser Teleportation",
+    "number": 4,
+    "description": "Teleport to a location you can see within range.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Sunlit Reinforcement",
+    "number": 4,
+    "description": "Use the Embers and grace of the sun to reinforce your flesh.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arcane Lock",
+    "number": 4,
+    "description": "Seal a door or container with your power. Strength and duration improve with tier.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Counter-pulse",
+    "number": 4,
+    "description": "Release a directed wave of energy which can counter a strike from an attack of a tier above the root. Creates a dedicated daily resource and relies heavily on personal spiritual strength.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mirror Strike",
+    "number": 2,
+    "description": "Absorb a fraction of attacks against you, then augment an attack to reflect it back at the opponent.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Earth Shield",
+    "number": 2,
+    "description": "Create a shield of earth which will hover around you defensively.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Cascading Defense",
+    "number": 2,
+    "description": "Increase your defences based on how many attacks have hit you in that moment or turn.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Reject Strike",
+    "number": 2,
+    "description": "A limited number of times a day, nullify a strike at or below the tier of the root.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Stable Footing",
+    "number": 2,
+    "description": "Increase your innate footwork skills to enhance dodging capabilities.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Recovery",
+    "number": 2,
+    "description": "Slowly recover Mental Energy, even if you do not sleep.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Conceptualise Energy",
+    "number": 2,
+    "description": "Add an idea to your energy, making it more effective at tasks related to that idea. The concept cannot be removed.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Link",
+    "number": 2,
+    "description": "Create a connection between you and someone using mental energy.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Bullet",
+    "number": 2,
+    "description": "Shoot a burst of mental energy at someone.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Move Mass",
+    "number": 2,
+    "description": "Move mass using mental energy.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Insight Theft",
+    "number": 2,
+    "description": "Mark someone and steal some of their proficiency whenever they gain it in a skill.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "To the Victor Goes the Spoils",
+    "number": 2,
+    "description": "When someone dies within range, claim some of their remaining resources if you already contain some of that type yourself.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Marked with Nothing",
+    "number": 2,
+    "description": "Create a link to the Nothing outside of reality, enabling siphoning even without direct access.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Echo Ability",
+    "number": 2,
+    "description": "Create a weakened version of a trait used against you. As a second root, it is extremely limited.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Pattern Recognition",
+    "number": 2,
+    "description": "Increase your ability to notice patterns among your skills, granting a small variable boost to skill theory.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mental Feedback",
+    "number": 2,
+    "description": "Provide feedback to anything related to skill theory, offering a flat boost to skills and techniques.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Perfect Retention",
+    "number": 2,
+    "description": "Remember any insights into skill theory you gain perfectly, preventing deterioration over time.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Overlearn",
+    "number": 2,
+    "description": "Forcefully obtain insight into a skill at cost.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Transfer Message",
+    "number": 3,
+    "description": "Pass a message to someone within range. Higher tiers allow two-way communication.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Transfer Emotion",
+    "number": 3,
+    "description": "Give an emotion you are experiencing, or take someone else's for a brief moment.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Transfer Element",
+    "number": 3,
+    "description": "Temporarily transfer a simple elemental property of the world onto yourself or another. Does not stack.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Energy Bolt",
+    "number": 3,
+    "description": "A ranged blast of energy. Starts at 10 meters of range, but doubles every tier.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Soul Spike",
+    "number": 3,
+    "description": "As previously shown, unblockable damage.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Arcane Arrow",
+    "number": 3,
+    "description": "Conjures an arrow for a bow. Useless unless you learn bowmanship, unless you want the complimentary fourth root.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Fireball",
+    "number": 3,
+    "description": "FIREBALLLL!!!!!!!!!!!!!!!!!!",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Stare of Immobilization",
+    "number": 3,
+    "description": "Slow the movement speed of an individual you are looking at. Effectiveness increases with tier.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Shared Retardation",
+    "number": 3,
+    "description": "Sacrifice a certain amount of your mental prowess, and an opponent also loses that amount. Higher tiers may increase targets or increase the amount lost.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Marks of Weakness, Marks of Woe",
+    "number": 3,
+    "description": "Place a mark upon someone, and they lose physical prowess.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Skilled Learner",
+    "number": 3,
+    "description": "Helps you with skill theory of a chosen type. Pick stealth and it is basically a stealth root.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  }
+]

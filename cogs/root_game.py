@@ -23,6 +23,7 @@ class RootGame(commands.Cog):
         await ctx.send(
             "**Sunflower Bot Commands**\n"
             "`!s help` - Show top-level command groups\n"
+            "`!s leaderboard` - Show the top 10 petal leaderboard\n"
             "`!s root help` - Show root game commands"
         )
 
@@ -60,13 +61,13 @@ class RootGame(commands.Cog):
         root1_data, root2_data = pair
         root1 = (
             f"1. [{root1_data['name']}] "
-            f"(Root Slot: {root1_data['number']}) "
-            f"Description: {root1_data['description']}"
+            f"(Root Slot: {root1_data['number']}) \n"
+            f"{root1_data['description']}"
         )
         root2 = (
             f"2. [{root2_data['name']}] "
-            f"(Root Slot: {root2_data['number']}) "
-            f"Description: {root2_data['description']}"
+            f"(Root Slot: {root2_data['number']}) \n"
+            f"{root2_data['description']}"
         )
 
         msg = await ctx.send(
@@ -83,32 +84,20 @@ class RootGame(commands.Cog):
             "option2": root2_data,
             "votes": {},
             "channel_id": ctx.channel.id,
-            "end_time": time.time() + 300
+            "message": msg,
         }
         logger.info("Vote created message_id=%s", msg.id)
+        asyncio.create_task(self.expire_vote(msg.id, timeout_seconds=60))
 
-        asyncio.create_task(self.close_vote(msg.id))
-
-
-    async def close_vote(self, message_id):
-        await asyncio.sleep(60)
-
-        vote = self.active_votes.get(message_id)
+    async def finalize_vote(self, message_id, winning_choice, voter_id):
+        vote = self.active_votes.pop(message_id, None)
         if vote is None:
-            logger.info("Vote %s already cleared before close", message_id)
+            logger.info("Vote %s already cleared before finalize", message_id)
             return
 
-        channel = self.bot.get_channel(vote["channel_id"])
-        msg = await channel.fetch_message(message_id)
-
-        v1 = sum(1 for v in vote["votes"].values() if v == 1)
-        v2 = sum(1 for v in vote["votes"].values() if v == 2)
-        logger.info("Closing vote %s with totals option1=%s option2=%s", message_id, v1, v2)
-
-        if v1 + v2 == 0:
-            logger.info("Vote %s closed with no votes", message_id)
-            del self.active_votes[message_id]
-            return
+        v1 = 1 if winning_choice == 1 else 0
+        v2 = 1 if winning_choice == 2 else 0
+        logger.info("Finalizing vote %s winner=%s voter=%s", message_id, winning_choice, voter_id)
 
         result = await self.bot.root_repository.record_matchup(
             vote["option1"],
@@ -116,10 +105,25 @@ class RootGame(commands.Cog):
             v1,
             v2,
         )
-        await self.bot.root_repository.award_petals(vote["votes"].keys(), petals=1)
-        logger.info("Awarded petals to %s voters for vote %s", len(vote["votes"]), message_id)
+        await self.bot.root_repository.award_petals([voter_id], petals=1)
+        user_data = await self.bot.root_repository.get_user_petals(voter_id)
+        logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
 
-        del self.active_votes[message_id]
+        await vote["message"].reply(
+            f"Thank you for playing the root game, <@{voter_id}>. You earned 1 petal. \n"
+            f"Total petals: {user_data['petals']}"
+        )
+
+    async def expire_vote(self, message_id, timeout_seconds=60):
+        await asyncio.sleep(timeout_seconds)
+
+        vote = self.active_votes.pop(message_id, None)
+        if vote is None:
+            logger.info("Vote %s already resolved before timeout", message_id)
+            return
+
+        logger.info("Vote %s expired with no responses", message_id)
+        await vote["message"].reply("Root game expired with no response.")
 
     
     @commands.Cog.listener()
@@ -138,7 +142,7 @@ class RootGame(commands.Cog):
         if vote is None:
             return
 
-        if time.time() > vote["end_time"]:
+        if payload.user_id in vote["votes"]:
             return
 
         if str(payload.emoji) == "1️⃣":
@@ -150,6 +154,7 @@ class RootGame(commands.Cog):
 
         vote["votes"][payload.user_id] = choice
         logger.info("Recorded vote message_id=%s user_id=%s choice=%s", payload.message_id, payload.user_id, choice)
+        await self.finalize_vote(payload.message_id, choice, payload.user_id)
 
     
     @root.command()
@@ -168,6 +173,22 @@ class RootGame(commands.Cog):
             for index, root in enumerate(roots, start=1)
         ]
         await ctx.send("Top 10 Roots:\n" + "\n".join(lines))
+
+    @s.command(name="leaderboard")
+    async def petals_leaderboard(self, ctx):
+        logger.info("Petal leaderboard requested by %s", ctx.author.id)
+        users = await self.bot.root_repository.get_petal_leaderboard()
+        if not users:
+            await ctx.send("No petal data found.")
+            return
+
+        lines = []
+        for index, user in enumerate(users, start=1):
+            member = ctx.guild.get_member(user["discord_user_id"]) if ctx.guild else None
+            display_name = member.display_name if member else f"User {user['discord_user_id']}"
+            lines.append(f"{index}. {display_name} ({user['petals']} petals)")
+
+        await ctx.send("Top 10 Petals:\n" + "\n".join(lines))
 
 
 async def setup(bot):
