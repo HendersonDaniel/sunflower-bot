@@ -35,7 +35,7 @@ class RootGame(commands.Cog):
             "`!s root help` - Show root game commands"
         )
 
-    @s.group()
+    @sf.group()
     async def root(self, ctx):
         if ctx.invoked_subcommand is None:
             logger.info("Root help requested by %s", ctx.author.id)
