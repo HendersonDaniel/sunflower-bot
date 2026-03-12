@@ -36,6 +36,13 @@ def build_petal_message(voter_id, total_petals):
     )
 
 
+def build_petal_summary_message(entries):
+    return "\n\n".join(
+        build_petal_message(entry["voter_id"], entry["total_petals"])
+        for entry in entries
+    )
+
+
 class RootGame(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -101,6 +108,8 @@ class RootGame(commands.Cog):
             "message": msg,
             "seen_voters": set(),
             "vote_count": 0,
+            "petal_entries": [],
+            "petal_message": None,
         }
         logger.info("Vote created message_id=%s", msg.id)
         asyncio.create_task(self.expire_vote(msg.id, timeout_seconds=VOTE_TIMEOUT_SECONDS))
@@ -140,10 +149,24 @@ class RootGame(commands.Cog):
         total_petals = await self.bot.root_repository.award_petals([voter_id], petals=1)
         total_petals = total_petals.get(voter_id, 0)
         vote["vote_count"] += 1
+        vote["petal_entries"].append(
+            {
+                "voter_id": voter_id,
+                "total_petals": total_petals,
+            }
+        )
         logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
 
-        await vote["message"].reply(
-            build_petal_message(voter_id, total_petals),
+        petal_text = build_petal_summary_message(vote["petal_entries"])
+        if vote["petal_message"] is None:
+            vote["petal_message"] = await vote["message"].reply(
+                petal_text,
+                view=self.build_play_again_view(),
+            )
+            return
+
+        await vote["petal_message"].edit(
+            content=petal_text,
             view=self.build_play_again_view(),
         )
 

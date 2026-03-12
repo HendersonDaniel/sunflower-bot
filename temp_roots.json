@@ -1,5 +1,55 @@
 [
   {
+    "name": "Authority Strain Transfer",
+    "number": 4,
+    "description": "Useless to those without multiple authorities, but allows those with to convert strain of one authority into strain of another.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Transference of Thoughts",
+    "number": 4,
+    "description": "A form of telepathy.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Power Theft",
+    "number": 4,
+    "description": "Upon slaughtering an opponent, transfer a fraction of their strength to yourself, only works once a day, uses increase with rank.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Ledger of Time",
+    "number": 4,
+    "description": "Pull a resource from your own future, hp, mental energy ect, if this debt is not paid by your future within a certain time, you take extreme backlashes.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Loan Root",
+    "number": 4,
+    "description": "Let someone else borrow one your roots. You will lose access to that root until you retrieve it, and they will receive it at the rank of this root, or the rank of the actual root, whichever is lower.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
     "name": "Physical Enhancement",
     "number": 3,
     "description": "Increases physicality stat by 1 each level.",
