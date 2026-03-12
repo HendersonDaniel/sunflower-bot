@@ -1,5 +1,6 @@
 import math
 import os
+import random
 from datetime import datetime, timezone
 
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -45,10 +46,36 @@ class RootRepository:
         return document
 
     async def get_random_pair(self):
-        roots = await self.roots.aggregate([{"$sample": {"size": 2}}]).to_list(length=2)
+        roots = await self.roots.find().to_list(length=None)
         if len(roots) < 2:
             return None
-        return roots
+
+        if len(roots) == 2:
+            return roots
+
+        anchor = min(
+            random.sample(roots, k=min(5, len(roots))),
+            key=lambda root: (root.get("comparisons", 0), random.random()),
+        )
+
+        other_roots = [root for root in roots if root["_id"] != anchor["_id"]]
+        if not other_roots:
+            return None
+
+        if random.random() < 0.2:
+            opponent = random.choice(other_roots)
+            return [anchor, opponent]
+
+        anchor_score = float(anchor.get("score", 0.0))
+        opponent = min(
+            random.sample(other_roots, k=min(10, len(other_roots))),
+            key=lambda root: (
+                abs(float(root.get("score", 0.0)) - anchor_score),
+                root.get("comparisons", 0),
+                random.random(),
+            ),
+        )
+        return [anchor, opponent]
 
     async def get_leaderboard(self, limit=10, root_number=None):
         query = {}
