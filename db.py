@@ -63,7 +63,6 @@ class RootRepository:
                     "$set": {"updated_at": now},
                     "$setOnInsert": {
                         "discord_user_id": discord_user_id,
-                        "petals": 0,
                         "created_at": now,
                     },
                 },
@@ -142,7 +141,7 @@ class RootRepository:
 
 def create_database():
     mongo_uri = os.getenv("MONGODB_URI")
-    database_name = os.getenv("MONGODB_DB_NAME", "sunflower_bot")
+    database_name = os.getenv("MONGODB_DB_NAME", "sunflower-db")
 
     if not mongo_uri:
         raise RuntimeError("Missing MONGODB_URI in environment.")

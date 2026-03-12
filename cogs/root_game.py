@@ -1,6 +1,9 @@
 from discord.ext import commands
 import asyncio
+import logging
 import time
+
+logger = logging.getLogger("sunflower-bot.root-game")
 
 
 class RootGame(commands.Cog):
@@ -11,10 +14,12 @@ class RootGame(commands.Cog):
     @commands.group()
     async def s(self, ctx):
         if ctx.invoked_subcommand is None:
+            logger.info("Top-level help requested by %s", ctx.author.id)
             await ctx.send("Use `!s help` to see a list of command groups.")
 
     @s.command(name="help")
     async def s_help(self, ctx):
+        logger.info("`!s help` requested by %s", ctx.author.id)
         await ctx.send(
             "**Sunflower Bot Commands**\n"
             "`!s help` - Show top-level command groups\n"
@@ -24,14 +29,16 @@ class RootGame(commands.Cog):
     @s.group()
     async def root(self, ctx):
         if ctx.invoked_subcommand is None:
+            logger.info("Root help requested by %s", ctx.author.id)
             await ctx.send("Use `!s root help` to see a list of `root` commands.")
 
     @root.command(name="help")
     async def root_help(self, ctx):
+        logger.info("`!s root help` requested by %s", ctx.author.id)
         await ctx.send(
             "**Root Commands**\n"
-            "`!s root play` - Start a vote between 2 random roots\n"
-            "`!s root leaderboard` - Show the top 10 roots by score"
+            "`!s root play` - Play the root game\n"
+            "`!s root leaderboard` - Show the top 10 roots leaderboard"
         )
 
     @root.command()
@@ -43,9 +50,11 @@ class RootGame(commands.Cog):
         Adds a petal to each user who votes (by giving the 1 or 2 emoji, but not both).
         """
 
+        logger.info("Starting root game for channel=%s", ctx.channel.id)
         pair = await self.bot.root_repository.get_random_pair()
         if pair is None:
-            await ctx.send("Add at least 2 roots to MongoDB before starting a vote.")
+            logger.warning("Root game start failed: fewer than 2 roots in database")
+            await ctx.send("Add at least 2 roots to MongoDB before playing the root game.")
             return
 
         root1_data, root2_data = pair
@@ -76,6 +85,7 @@ class RootGame(commands.Cog):
             "channel_id": ctx.channel.id,
             "end_time": time.time() + 300
         }
+        logger.info("Vote created message_id=%s", msg.id)
 
         asyncio.create_task(self.close_vote(msg.id))
 
@@ -85,6 +95,7 @@ class RootGame(commands.Cog):
 
         vote = self.active_votes.get(message_id)
         if vote is None:
+            logger.info("Vote %s already cleared before close", message_id)
             return
 
         channel = self.bot.get_channel(vote["channel_id"])
@@ -92,8 +103,10 @@ class RootGame(commands.Cog):
 
         v1 = sum(1 for v in vote["votes"].values() if v == 1)
         v2 = sum(1 for v in vote["votes"].values() if v == 2)
+        logger.info("Closing vote %s with totals option1=%s option2=%s", message_id, v1, v2)
 
         if v1 + v2 == 0:
+            logger.info("Vote %s closed with no votes", message_id)
             del self.active_votes[message_id]
             return
 
@@ -104,12 +117,19 @@ class RootGame(commands.Cog):
             v2,
         )
         await self.bot.root_repository.award_petals(vote["votes"].keys(), petals=1)
+        logger.info("Awarded petals to %s voters for vote %s", len(vote["votes"]), message_id)
 
         del self.active_votes[message_id]
 
     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
+        logger.info(
+            "Reaction add message_id=%s user_id=%s emoji=%s",
+            payload.message_id,
+            payload.user_id,
+            payload.emoji,
+        )
 
         if payload.user_id == self.bot.user.id:
             return
@@ -129,6 +149,7 @@ class RootGame(commands.Cog):
             return
 
         vote["votes"][payload.user_id] = choice
+        logger.info("Recorded vote message_id=%s user_id=%s choice=%s", payload.message_id, payload.user_id, choice)
 
     
     @root.command()
@@ -136,6 +157,7 @@ class RootGame(commands.Cog):
         """
         Shows a list of top ten roots in the ranking.
         """
+        logger.info("Leaderboard requested by %s", ctx.author.id)
         roots = await self.bot.root_repository.get_leaderboard()
         if not roots:
             await ctx.send("No roots found in MongoDB.")
