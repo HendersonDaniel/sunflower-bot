@@ -25,7 +25,7 @@ class RootGame(commands.Cog):
             logger.info("Top-level help requested by %s", ctx.author.id)
             await ctx.send("Use `!s help` to see a list of command groups.")
 
-    @s.command(name="help")
+    @sf.command(name="help")
     async def s_help(self, ctx):
         logger.info("`!s help` requested by %s", ctx.author.id)
         await ctx.send(
