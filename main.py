@@ -19,6 +19,16 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
+async def sf_help_command(ctx):
+    logger.info("`!sf help` requested by %s", ctx.author.id)
+    await ctx.send(
+        "**Sunflower Bot Commands**\n"
+        "`!sf help` - Show top-level command groups\n"
+        "`!sf leaderboard` - Show the top 10 petal leaderboard\n"
+        "`!sf root help` - Show root game commands"
+    )
+
+
 @bot.event
 async def on_ready():
     logger.info("Logged in as %s (ID: %s)", bot.user, bot.user.id)
@@ -70,6 +80,13 @@ async def load_cogs():
         if filename.endswith(".py"):
             logger.info("Loading cog %s", filename)
             await bot.load_extension(f"cogs.{filename[:-3]}")
+
+    sf_group = bot.get_command("sf")
+    if sf_group is None:
+        raise RuntimeError("The `sf` command group was not loaded.")
+
+    if sf_group.get_command("help") is None:
+        sf_group.add_command(commands.Command(sf_help_command, name="help"))
 
 
 async def main():

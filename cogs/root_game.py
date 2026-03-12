@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 import asyncio
 import logging
 
@@ -14,6 +15,27 @@ def format_root_option(index, root):
     )
 
 
+def format_user_mention(user=None, user_id=None):
+    if user is not None:
+        return user.mention
+    if user_id is not None:
+        return f"<@{user_id}>"
+    return ""
+
+
+def build_root_game_message(root1, root2, ping_user=None):
+    prompt_prefix = f"{format_user_mention(user=ping_user)} " if ping_user is not None else ""
+    return f"{prompt_prefix}Which root is better?\n\n{root1}\n\n{root2}"
+
+
+def build_petal_message(voter_id, total_petals):
+    user_mention = format_user_mention(user_id=voter_id)
+    return (
+        f"Thank you for playing the root game {user_mention}. \n"
+        f"You earned 1 Petal. \nTotal Petals: {total_petals}"
+    )
+
+
 class RootGame(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,16 +46,6 @@ class RootGame(commands.Cog):
         if ctx.invoked_subcommand is None:
             logger.info("Top-level help requested by %s", ctx.author.id)
             await ctx.send("Use `!sf help` to see a list of command groups.")
-
-    @sf.command(name="help")
-    async def sf_help(self, ctx):
-        logger.info("`!sf help` requested by %s", ctx.author.id)
-        await ctx.send(
-            "**Sunflower Bot Commands**\n"
-            "`!sf help` - Show top-level command groups\n"
-            "`!sf leaderboard` - Show the top 10 petal leaderboard\n"
-            "`!sf root help` - Show root game commands"
-        )
 
     @sf.group()
     async def root(self, ctx):
@@ -52,23 +64,33 @@ class RootGame(commands.Cog):
 
     @root.command()
     async def play(self, ctx):
-        logger.info("Starting root game for channel=%s", ctx.channel.id)
+        await self.start_root_game(
+            channel=ctx.channel,
+            reply_target=ctx.message,
+            mention_author=True,
+            ping_user=None,
+        )
+
+    async def start_root_game(self, channel, reply_target=None, mention_author=False, ping_user=None):
+        logger.info("Starting root game for channel=%s", channel.id)
         pair = await self.bot.root_repository.get_random_pair()
         if pair is None:
             logger.warning("Root game start failed: fewer than 2 roots in database")
-            await ctx.send("Add at least 2 roots to the database before playing the root game.")
+            await channel.send("Add at least 2 roots to the database before playing the root game.")
             return
 
         root1_data, root2_data = pair
         root1 = format_root_option(1, root1_data)
         root2 = format_root_option(2, root2_data)
 
-        msg = await ctx.reply(
-            "Which root is better?\n\n"
-            f"{root1}\n\n"
-            f"{root2}",
-            mention_author=True,
-        )
+        message_text = build_root_game_message(root1, root2, ping_user=ping_user)
+        if reply_target is not None:
+            msg = await reply_target.reply(
+                message_text,
+                mention_author=mention_author,
+            )
+        else:
+            msg = await channel.send(message_text)
 
         await msg.add_reaction("1️⃣")
         await msg.add_reaction("2️⃣")
@@ -77,45 +99,75 @@ class RootGame(commands.Cog):
             "option1": root1_data,
             "option2": root2_data,
             "message": msg,
+            "seen_voters": set(),
+            "vote_count": 0,
         }
         logger.info("Vote created message_id=%s", msg.id)
         asyncio.create_task(self.expire_vote(msg.id, timeout_seconds=VOTE_TIMEOUT_SECONDS))
 
-    async def finalize_vote(self, message_id, winning_choice, voter_id):
-        vote = self.active_votes.pop(message_id, None)
+    def build_play_again_view(self):
+        return PlayAgainView(self)
+
+    async def process_vote(self, message_id, winning_choice, voter_id):
+        vote = self.active_votes.get(message_id)
         if vote is None:
-            logger.info("Vote %s already cleared before finalize", message_id)
+            logger.info("Vote %s already cleared before processing vote", message_id)
             return
 
-        v1 = 1 if winning_choice == 1 else 0
-        v2 = 1 if winning_choice == 2 else 0
-        logger.info("Finalizing vote %s winner=%s voter=%s", message_id, winning_choice, voter_id)
+        logger.info(
+            "Processing vote %s winner=%s voter=%s",
+            message_id,
+            winning_choice,
+            voter_id,
+        )
+        votes1 = 1 if winning_choice == 1 else 0
+        votes2 = 1 if winning_choice == 2 else 0
 
         result = await self.bot.root_repository.record_matchup(
             vote["option1"],
             vote["option2"],
-            v1,
-            v2,
+            votes1,
+            votes2,
         )
+        if result is None:
+            logger.info("Vote %s had no tally to record", message_id)
+            await vote["message"].reply(
+                "Root game expired with no response.",
+                view=self.build_play_again_view(),
+            )
+            return
+
         total_petals = await self.bot.root_repository.award_petals([voter_id], petals=1)
         total_petals = total_petals.get(voter_id, 0)
+        vote["vote_count"] += 1
         logger.info("Awarded 1 petal to user %s for vote %s", voter_id, message_id)
 
         await vote["message"].reply(
-            f"Thank you for playing the root game <@{voter_id}>. \n"
-            f"You earned 1 Petal. \nTotal Petals: {total_petals}"
+            build_petal_message(voter_id, total_petals),
+            view=self.build_play_again_view(),
         )
 
     async def expire_vote(self, message_id, timeout_seconds=60):
         await asyncio.sleep(timeout_seconds)
 
-        vote = self.active_votes.pop(message_id, None)
-        if vote is None:
+        if message_id not in self.active_votes:
             logger.info("Vote %s already resolved before timeout", message_id)
             return
 
-        logger.info("Vote %s expired with no responses", message_id)
-        await vote["message"].reply("Root game expired with no response.")
+        vote = self.active_votes.pop(message_id, None)
+        if vote is None:
+            logger.info("Vote %s already resolved during timeout cleanup", message_id)
+            return
+
+        if vote["vote_count"] == 0:
+            logger.info("Vote %s expired with no responses", message_id)
+            await vote["message"].reply(
+                "Root game expired with no response.",
+                view=self.build_play_again_view(),
+            )
+            return
+
+        logger.info("Vote %s closed after %s unique votes", message_id, vote["vote_count"])
 
     
     @commands.Cog.listener()
@@ -141,8 +193,24 @@ class RootGame(commands.Cog):
         else:
             return
 
-        logger.info("Recorded vote message_id=%s user_id=%s choice=%s", payload.message_id, payload.user_id, choice)
-        await self.finalize_vote(payload.message_id, choice, payload.user_id)
+        if payload.user_id in vote["seen_voters"]:
+            logger.info(
+                "Ignoring duplicate vote message_id=%s user_id=%s choice=%s",
+                payload.message_id,
+                payload.user_id,
+                choice,
+            )
+            return
+
+        vote["seen_voters"].add(payload.user_id)
+
+        logger.info(
+            "Recorded vote message_id=%s user_id=%s choice=%s",
+            payload.message_id,
+            payload.user_id,
+            choice,
+        )
+        await self.process_vote(payload.message_id, choice, payload.user_id)
 
     
     @root.command()
@@ -201,3 +269,20 @@ class RootGame(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(RootGame(bot))
+
+
+class PlayAgainView(discord.ui.View):
+    def __init__(self, root_game_cog):
+        super().__init__(timeout=None)
+        self.root_game_cog = root_game_cog
+
+    @discord.ui.button(label="Play Again", style=discord.ButtonStyle.primary)
+    async def play_again(self, interaction, button):
+        logger.info("Play again requested by user=%s channel=%s", interaction.user.id, interaction.channel.id)
+        await interaction.response.defer()
+        await self.root_game_cog.start_root_game(
+            channel=interaction.channel,
+            reply_target=interaction.message,
+            mention_author=True,
+            ping_user=interaction.user,
+        )
