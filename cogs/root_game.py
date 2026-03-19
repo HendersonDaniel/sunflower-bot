@@ -240,7 +240,8 @@ class RootGame(commands.Cog):
             return
 
         lines = [
-            f"{index}. ({root['number']}) [{root['name']}] ({root['score']:.2f})"
+            f"{index}. ({root['number']}) [{root['name']}] "
+            f"({root['score']:.2f}, {root['certainty'] * 100:.0f}% certainty)"
             for index, root in enumerate(roots, start=1)
         ]
         header = "Top 10 Roots:" if root_number is None else f"Top 10 Roots for Slot {root_number}:"

@@ -11,6 +11,18 @@ def utc_now():
     return datetime.now(timezone.utc)
 
 
+def calculate_certainty(comparisons):
+    return 1 - math.exp(-max(0, comparisons) / 10)
+
+
+def weighted_choice(items, weight_fn):
+    weights = [max(0.0, float(weight_fn(item))) for item in items]
+    total = sum(weights)
+    if total <= 0:
+        return random.choice(items)
+    return random.choices(items, weights=weights, k=1)[0]
+
+
 class RootRepository:
     def __init__(self, database):
         self.database = database
@@ -49,27 +61,32 @@ class RootRepository:
         if len(roots) == 2:
             return roots
 
-        anchor = min(
-            random.sample(roots, k=min(5, len(roots))),
-            key=lambda root: (root.get("comparisons", 0), random.random()),
+        anchor = weighted_choice(
+            roots,
+            lambda root: 1 / math.sqrt(root.get("comparisons", 0) + 1),
         )
 
         other_roots = [root for root in roots if root["_id"] != anchor["_id"]]
         if not other_roots:
             return None
 
-        if random.random() < 0.2:
-            opponent = random.choice(other_roots)
-            return [anchor, opponent]
-
         anchor_score = float(anchor.get("score", 0.0))
-        opponent = min(
-            random.sample(other_roots, k=min(10, len(other_roots))),
-            key=lambda root: (
-                abs(float(root.get("score", 0.0)) - anchor_score),
-                root.get("comparisons", 0),
-                random.random(),
-            ),
+        broad_match = random.random() < 0.2
+        score_band = 12.0
+
+        def opponent_weight(root):
+            score_diff = abs(float(root.get("score", 0.0)) - anchor_score)
+            certainty = calculate_certainty(root.get("comparisons", 0))
+            uncertainty_weight = 1.25 - certainty
+            if broad_match:
+                closeness_weight = 1.0
+            else:
+                closeness_weight = math.exp(-score_diff / score_band)
+            return closeness_weight * uncertainty_weight
+
+        opponent = weighted_choice(
+            other_roots,
+            opponent_weight,
         )
         return [anchor, opponent]
 
@@ -79,7 +96,11 @@ class RootRepository:
             query["number"] = int(root_number)
 
         cursor = self.roots.find(query).sort("score", -1).limit(limit)
-        return await cursor.to_list(length=limit)
+        roots = await cursor.to_list(length=limit)
+        for root in roots:
+            comparisons = root.get("comparisons", 0)
+            root["certainty"] = calculate_certainty(comparisons)
+        return roots
 
     async def award_petals(self, discord_user_ids, petals=1):
         now = utc_now()
@@ -117,7 +138,10 @@ class RootRepository:
         current2 = float(root2.get("score", 0.0))
         expected1 = 1 / (1 + math.exp(current2 - current1))
         actual1 = votes1 / total_votes
-        delta = 24 * (actual1 - expected1)
+        comparisons1 = root1.get("comparisons", 0)
+        comparisons2 = root2.get("comparisons", 0)
+        k_factor = max(10.0, 32.0 / math.sqrt(min(comparisons1, comparisons2) + 1))
+        delta = k_factor * (actual1 - expected1)
 
         next1 = current1 + delta
         next2 = current2 - delta
