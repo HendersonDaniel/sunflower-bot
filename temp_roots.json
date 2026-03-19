@@ -1,5 +1,55 @@
 [
   {
+    "name": "Bulk Burst Life",
+    "number": 5,
+    "description": "Invest some time and mental energy to repair your body; the effect scales off of how long you do this for.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Mark of Life Leech",
+    "number": 6,
+    "description": "Leave a mark upon someone; every time they take damage, you recover a small fraction of the lost life.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Solar Meditative Enlightenment",
+    "number": 5,
+    "description": "Meditate in the sun and recover missing life force and hunger.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Resonant Restoration",
+    "number": 6,
+    "description": "Bestow the grace of Luminare upon the world and heal your allies; the effect scales with devotion to Luminare and the number of people being healed.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
+    "name": "Stolen Recovery",
+    "number": 5,
+    "description": "Leave a mark upon someone; whenever they heal, you take some of it.",
+    "score": 0,
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "comparisons": 0
+  },
+  {
     "name": "Authority Strain Transfer",
     "number": 4,
     "description": "Useless to those without multiple authorities, but allows those with to convert strain of one authority into strain of another.",
