@@ -131,19 +131,12 @@ class RootGame(commands.Cog):
         votes1 = 1 if winning_choice == 1 else 0
         votes2 = 1 if winning_choice == 2 else 0
 
-        result = await self.bot.root_repository.record_matchup(
+        await self.bot.root_repository.record_matchup(
             vote["option1"],
             vote["option2"],
             votes1,
             votes2,
         )
-        if result is None:
-            logger.info("Vote %s had no tally to record", message_id)
-            await vote["message"].reply(
-                "Root game expired with no response.",
-                view=self.build_play_again_view(),
-            )
-            return
 
         total_petals = await self.bot.root_repository.award_petals([voter_id], petals=1)
         total_petals = total_petals.get(voter_id, 0)

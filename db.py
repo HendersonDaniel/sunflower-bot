@@ -15,16 +15,12 @@ class RootRepository:
     def __init__(self, database):
         self.database = database
         self.roots = database["roots"]
-        self.matchups = database["root_matchups"]
         self.users = database["users"]
 
     async def init_indexes(self):
         await self.roots.create_index("number")
         await self.roots.create_index("name", unique=True)
         await self.roots.create_index("score")
-        await self.matchups.create_index("played_at")
-        await self.matchups.create_index([("root1_id", 1), ("root2_id", 1)])
-        await self.matchups.create_index("winner_root_id")
         await self.users.create_index("discord_user_id", unique=True)
         await self.users.create_index("petals")
 
@@ -128,15 +124,12 @@ class RootRepository:
         now = utc_now()
 
         if votes1 > votes2:
-            winner_root_id = root1["_id"]
             update1 = {"wins": 1, "comparisons": 1}
             update2 = {"losses": 1, "comparisons": 1}
         elif votes2 > votes1:
-            winner_root_id = root2["_id"]
             update1 = {"losses": 1, "comparisons": 1}
             update2 = {"wins": 1, "comparisons": 1}
         else:
-            winner_root_id = None
             update1 = {"ties": 1, "comparisons": 1}
             update2 = {"ties": 1, "comparisons": 1}
 
@@ -154,29 +147,6 @@ class RootRepository:
                 "$inc": update2,
             },
         )
-
-        await self.matchups.insert_one(
-            {
-                "root1_id": root1["_id"],
-                "root2_id": root2["_id"],
-                "root1_name": root1["name"],
-                "root2_name": root2["name"],
-                "votes1": votes1,
-                "votes2": votes2,
-                "winner_root_id": winner_root_id,
-                "root1_score_before": current1,
-                "root2_score_before": current2,
-                "root1_score_after": next1,
-                "root2_score_after": next2,
-                "played_at": now,
-            }
-        )
-
-        return {
-            "root1_score": next1,
-            "root2_score": next2,
-            "winner_root_id": winner_root_id,
-        }
 
 
 def create_database():
