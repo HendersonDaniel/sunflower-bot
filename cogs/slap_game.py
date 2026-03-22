@@ -25,12 +25,15 @@ def roll_slap_petals():
 def build_success_message(display_name, petals):
     response = random.choice(SLAP_RESPONSES)
     petal_word = "petal" if petals == 1 else "petals"
-    return f"{response}\n{display_name} slapped Sunflower and shook off {petals} {petal_word}."
+    return f"{response}\n\n{display_name} slapped Sunflower and caused it to drop {petals} {petal_word}."
 
 
 def format_remaining_cooldown(cooldown_until):
     if cooldown_until is None:
         return "less than a minute"
+
+    if cooldown_until.tzinfo is None:
+        cooldown_until = cooldown_until.replace(tzinfo=timezone.utc)
 
     now = datetime.now(timezone.utc)
     remaining_seconds = max(0, int((cooldown_until - now).total_seconds()))
@@ -47,22 +50,19 @@ def format_remaining_cooldown(cooldown_until):
     if minutes:
         minute_word = "minute" if minutes == 1 else "minutes"
         parts.append(f"{minutes} {minute_word}")
-    if not hours and seconds:
-        second_word = "second" if seconds == 1 else "seconds"
-        parts.append(f"{seconds} {second_word}")
-
     return " ".join(parts) if parts else "less than a minute"
 
 
 def build_blocked_message(cooldown_until):
     remaining = format_remaining_cooldown(cooldown_until)
-    return f"Sunflower is still on guard and blocked the slap. Perhaps try again in {remaining}."
+    return f"Sunflower BLOCKED your slap. It is still on guard. Perhaps try again in {remaining}."
 
 
 class SlapGame(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
     async def slap(self, ctx):
         logger.info("`!sf slap` requested by user=%s", ctx.author.id)
         petals = roll_slap_petals()
@@ -93,5 +93,8 @@ async def setup(bot):
     if sf_group is None:
         raise RuntimeError("The `sf` command group must be loaded before slap commands.")
 
+    slap_command = cog.get_command("slap")
+    if slap_command is None:
+        raise RuntimeError("The slap command was not registered on the cog.")
     if sf_group.get_command("slap") is None:
-        sf_group.add_command(commands.Command(cog.slap, name="slap"))
+        sf_group.add_command(slap_command)
