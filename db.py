@@ -1,7 +1,7 @@
 import math
 import os
 import random
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
@@ -28,6 +28,7 @@ class RootRepository:
         self.database = database
         self.roots = database["roots"]
         self.users = database["users"]
+        self.bot_state = database["bot_state"]
 
     async def init_indexes(self):
         await self.roots.create_index("number")
@@ -35,6 +36,18 @@ class RootRepository:
         await self.roots.create_index("score")
         await self.users.create_index("discord_user_id", unique=True)
         await self.users.create_index("petals")
+        await self.bot_state.create_index("key", unique=True)
+        await self.bot_state.update_one(
+            {"key": "slap_cooldown"},
+            {
+                "$setOnInsert": {
+                    "key": "slap_cooldown",
+                    "cooldown_until": datetime.min.replace(tzinfo=timezone.utc),
+                    "created_at": utc_now(),
+                }
+            },
+            upsert=True,
+        )
 
     async def create_root(self, name, number, description, score=0.0):
         now = utc_now()
@@ -128,6 +141,29 @@ class RootRepository:
     async def get_petal_leaderboard(self, limit=10):
         cursor = self.users.find().sort("petals", -1).limit(limit)
         return await cursor.to_list(length=limit)
+
+    async def attempt_slap(self, petals, cooldown_seconds):
+        now = utc_now()
+        cooldown_until = now + timedelta(seconds=cooldown_seconds)
+        result = await self.bot_state.find_one_and_update(
+            {
+                "key": "slap_cooldown",
+                "cooldown_until": {"$lte": now},
+            },
+            {
+                "$set": {
+                    "cooldown_until": cooldown_until,
+                    "last_slap_petals": int(petals),
+                    "updated_at": now,
+                }
+            },
+            return_document=ReturnDocument.AFTER,
+        )
+        if result is not None:
+            return {"success": True, "state": result}
+
+        current_state = await self.bot_state.find_one({"key": "slap_cooldown"})
+        return {"success": False, "state": current_state}
 
     async def record_matchup(self, root1, root2, votes1, votes2):
         total_votes = votes1 + votes2

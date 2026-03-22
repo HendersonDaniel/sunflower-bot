@@ -25,6 +25,7 @@ async def sf_help_command(ctx):
         "**Sunflower Bot Commands**\n"
         "`!sf help` - Show top-level command groups\n"
         "`!sf leaderboard` - Show the top 10 petal leaderboard\n"
+        "`!sf slap` - Slap Sunflower to make it drop petals\n"
         "`!sf root help` - Show root game commands"
     )
 
@@ -73,7 +74,7 @@ async def on_command_error(ctx, error):
 
 
 async def load_cogs():
-    for filename in os.listdir("./cogs"):
+    for filename in sorted(os.listdir("./cogs")):
         if filename.endswith(".py"):
             logger.info("Loading cog %s", filename)
             await bot.load_extension(f"cogs.{filename[:-3]}")
