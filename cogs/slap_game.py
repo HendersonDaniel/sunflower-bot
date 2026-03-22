@@ -93,7 +93,7 @@ async def setup(bot):
     if sf_group is None:
         raise RuntimeError("The `sf` command group must be loaded before slap commands.")
 
-    slap_command = cog.get_command("slap")
+    slap_command = next((command for command in cog.get_commands() if command.name == "slap"), None)
     if slap_command is None:
         raise RuntimeError("The slap command was not registered on the cog.")
     if sf_group.get_command("slap") is None:
